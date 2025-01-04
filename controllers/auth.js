@@ -39,7 +39,7 @@ exports.loginUser = async (req, res) => {
   // const { email, password } = req.body;
   console.log("Log in API called");
   const user = req.user;
-  console.log(user);
+
   
 
   res
@@ -53,6 +53,8 @@ exports.loginUser = async (req, res) => {
 
 
 exports.checkUser = async (req,res)=>{
+  console.log('Check User API Invoke');
+  
   if (req.user) {
     res.json(req.user);
   } else {

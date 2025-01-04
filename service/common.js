@@ -6,7 +6,7 @@ let transporter = nodemailer.createTransport({
   port: 587,
   secure: false, // true for 465, false for other ports
   auth: {
-    user: `Sameerrajyt@gmail.com`, // gmail
+    user: process.env.EMAIL, // gmail
     pass: process.env.EMAIL_PASSWORD, // pass
   },
 });
@@ -18,10 +18,12 @@ exports.isAuth = (req, res, done) => {
 
 
 exports.cookieExtractor = function (req) {
+  console.log(req.cookies);
+  
   let token = null;
   if (req && req.cookies) {
     token = req.cookies["jwt"];
-    console.log(token, "working");
+
   }
   return token;
 };
@@ -40,8 +42,8 @@ exports.sendMail = async function ({  subject, html }) {
   console.log('Send Mail Function Called');
   
   let info = await transporter.sendMail({
-    from: '"Bhokal Trader" <Sameerrajyt@gmail.com>', // sender address
-    to :`sameerrajyt@gmail.com`,
+    from: `"Bhokal Trader" ${process.env.EMAIL}`, // sender address
+    to :`${process.env.EMAIL}`,
     subject,
     text:'Conformation Mail',
     html:html
@@ -167,7 +169,6 @@ exports.ConfirmTemplate = function (data) {
 
 
 exports.ConformationMessage = function (courseId){
-  console.log(courseId);
   
   return (
    ` <html>

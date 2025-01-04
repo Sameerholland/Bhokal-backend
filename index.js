@@ -24,9 +24,12 @@ const { video } = require("./models/Vidoes");
 
 server.use(cookieParser());
 server.use(express.json());
-server.use(cors());
-var JwtStrategy = require('passport-jwt').Strategy,
-    ExtractJwt = require('passport-jwt').ExtractJwt;
+server.use(cors({
+  origin: "http://localhost:3000", // Allow only localhost:3000
+  credentials: true, // Allow cookies or authentication headers
+}));
+
+var JwtStrategy = require('passport-jwt').Strategy;
 const opts = {};
 opts.jwtFromRequest = cookieExtractor;
 opts.secretOrKey = process.env.JWT_SECRET_KEY;
@@ -47,11 +50,11 @@ server.use(express.static(path.resolve(__dirname, 'build')));
 server.use(express.static(path.join(__dirname, "upload/")));
 
 server.use("/user", Authrouter.router);
-server.use("/student",  isAuth(), StudentRouter.router);
-server.use("/course",  isAuth(), CourseRouter.router);
-server.use("/contact",  isAuth(), QueryRouter.router);
-server.use("/dashboard",  isAuth(),  DashboardRouter.router);
-server.use("/class",  isAuth(),  VideoRouter.router);
+server.use("/student",   StudentRouter.router);
+server.use("/course",   CourseRouter.router);
+server.use("/contact",   QueryRouter.router);
+server.use("/dashboard",    DashboardRouter.router);
+server.use("/class",    VideoRouter.router);
 
 server.get("/image", (req, res) => {
   const imagePath = path.join(__dirname, `uploads/images/${req.query.url}`); // Path to the image file
@@ -93,10 +96,8 @@ server.get("/video", (req, res) => {
 
 server.get('/confirm-delete',async (req,res)=>{
   console.log('Delete From Mail API Called');
-  console.log(req.query);
   if(req.query.key1 === 'student'){
     const data = await User.findByIdAndDelete(req.query.key2)
-    console.log(data);
     if(!data){
       res.status(400).send(rejectionMessage())
     }
@@ -108,7 +109,6 @@ server.get('/confirm-delete',async (req,res)=>{
   if(req.query.key1 === 'video'){
 
     const videodata = await video.findByIdAndDelete(req.query.key2)
-    console.log(videodata);
     if(!videodata){
       res.status(400).send(rejectionMessage())
     }
@@ -160,10 +160,10 @@ passport.use(
     done
   ) {
     // by default passport uses username
-    console.log({ email, password });
+
     try {
       const user = await User.findOne({ email: email });
-      console.log(email, password, user);
+
       if (!user) {
         return done(null, false, { message: "invalid credentials" }); // for safety
       }
@@ -187,9 +187,13 @@ passport.use(
 
 passport.use(
   'jwt',
+  
   new JwtStrategy(opts, async function (jwt_payload, done) {
+    console.log(jwt_payload,'working');
     try {
-      console.log(jwt_payload,"Wrking");
+      
+      
+
       
       const user = await User.findById(jwt_payload.id);
       if (user) {      
@@ -232,5 +236,5 @@ async function main() {
 }
 
 server.listen(process.env.PORT, () => {
-  console.log("server started");
+  console.log(`server started ${process.env.PORT}`);
 });

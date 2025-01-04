@@ -36,7 +36,7 @@ exports.GetQueryData = async (req,res) =>{
 exports.DeleteQueryByID = async (req,res)=>{
   console.log('Delte Query By ID API Invoke');
   const {_id} = req.body;
-  console.log(req.body);
+
   
   try{
     const data = await contact.findByIdAndDelete(_id)

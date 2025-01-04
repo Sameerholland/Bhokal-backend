@@ -5,8 +5,6 @@ const { sendMail, ConfirmTemplate } = require("../service/common");
 exports.addclass = async (req,res)=>{
    console.log('Video Added API Invoke');
    const {number,name,duration,courseId} = req.body;
-
-   console.log(req.body);
    
    try{
       const videoName = req.file.filename; // Assuming multer handles file uploads
@@ -54,14 +52,11 @@ exports.getClassesByCourseId = async (req,res)=>{
 
 exports.DeleteClassQuery = async (req,res)=>{
    console.log('Delete Query API called');
-   console.log(req);
+
    
    try{
 
       const data = await video.findById(req.body.id)
-
-
-         console.log(data);
          
       const newData = {
          _id:data._id,
