@@ -222,10 +222,8 @@ passport.deserializeUser(function (user, cb) {
   });
 });
 
-//2qAptM77pyZkWcIU
-//YOHbtjSXmalG0zyc
 
-"mongodb+srv://bhokaltrader:YOHbtjSXmalG0zyc@cluster0.mo9xo.mongodb.net/"
+
 
 main().catch((err) => console.log(err));
 async function main() {
